@@ -25,3 +25,9 @@ Notes for debugging:
     ]
 }
 ```
+
+- Remove everything for testing
+
+```bash
+sudo yum remove -y  otelcol-contrib && sudo rm -r /etc/otelcol-contrib/ && sudo yum remove -y jq
+```

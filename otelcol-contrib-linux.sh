@@ -1,5 +1,9 @@
 #!/bin/bash
 
+log() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1"
+}
+
 # Function to display a message in green color
 print_success_message() {
     echo -e "\e[32m$1\e[0m"  # \e[32m sets the color to green, \e[0m resets the color
@@ -10,12 +14,11 @@ print_error_message() {
     echo -e "\e[31m$1\e[0m"  # \e[31m sets the color to red, \e[0m resets the color
 }
 
-
 # Check if the OpenTelemetry Collector Contrib version is already installed
 check_if_installed() {
     local installed_version
     installed_version=$(/usr/bin/otelcol-contrib --version 2>/dev/null)
-   
+    
     if [ -n "${installed_version}" ]; then
         # If it exists, tell the user and exit
         echo ""
@@ -30,26 +33,27 @@ get_architecture() {
     case $(uname -m) in
         "x86_64" | "amd64")
             echo "amd64"
-            ;;
+        ;;
         "aarch64" | "arm64")
             echo "arm64"
-            ;;
+        ;;
         *)
             print_error_message "Unsupported architecture: $(uname -m)"
             exit 1
-            ;;
+        ;;
     esac
 }
 
 # Check and install jq to retrieve the latest version of otelcol-contrib
 install_jq() {
+    log "Checking and installing jq..."
     if ! command -v jq &> /dev/null; then
-        echo "jq is not installed. Installing jq..."
+        print_success_message "jq is not installed. Installing jq..."
         # Install jq based on the package manager
         if [ -f "/etc/debian_version" ]; then
             sudo apt-get update
             sudo apt-get install -y jq
-        elif [ -f "/etc/redhat-release" ]; then
+            elif [ -f "/etc/redhat-release" ]; then
             sudo yum install -y jq
         else
             print_error_message "Unsupported Linux distribution. Please install jq manually."
@@ -70,17 +74,17 @@ get_download_link() {
     local version=$1
     local arch=$2
     local distro=$3
-
+    
     local package_format
     if [ "${distro}" == "debian" ]; then
         package_format="deb"
-    elif [ "${distro}" == "rpm" ]; then
+        elif [ "${distro}" == "rpm" ]; then
         package_format="rpm"
     else
         print_error_message "Unsupported distribution: ${distro}"
         exit 1
     fi
-
+    
     echo "https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v${version}/otelcol-contrib_${version}_linux_${arch}.${package_format}"
 }
 
@@ -135,7 +139,7 @@ fi
 # Get the Linux distro
 if [ -f "/etc/debian_version" ]; then
     DISTRO="debian"
-elif [ -f "/etc/redhat-release" ]; then
+    elif [ -f "/etc/redhat-release" ]; then
     DISTRO="rpm"
 else
     print_error_message "Unsupported Linux distribution."
@@ -152,12 +156,12 @@ download_package "${DOWNLOAD_LINK}" "${PACKAGE_NAME}"
 # Install on Debian-based systems
 if [ "${DISTRO}" == "debian" ]; then
     install_debian "${VERSION}" "${PACKAGE_NAME}"
-
-# Install on RPM-based systems
-elif [ "${DISTRO}" == "rpm" ]; then
+    
+    # Install on RPM-based systems
+    elif [ "${DISTRO}" == "rpm" ]; then
     install_rpm "${VERSION}" "${PACKAGE_NAME}"
-
-# Unsupported distribution
+    
+    # Unsupported distribution
 else
     print_error_message "Unsupported Linux distribution."
     exit 1
@@ -174,3 +178,6 @@ if [ $? -eq 0 ]; then
 else
     print_error_message "Installation failed. Please check the error messages above."
 fi
+
+# Remove everything for testing
+# sudo yum remove -y  otelcol-contrib && sudo rm -r /etc/otelcol-contrib/ && sudo yum remove -y jq

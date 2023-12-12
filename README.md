@@ -1,8 +1,6 @@
 Overview
 
-OTel Collector Contrib Installation script for linux platforms.
-
-
+This is a bash installation script for Linux platforms' OTel Collector contrib version. It will look for the latest available version and install it if the OTel Collector contrib binary is not installed.
 
 Notes for debugging:
 - vsCode launch.json debug file notes

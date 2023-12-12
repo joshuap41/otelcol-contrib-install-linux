@@ -95,14 +95,14 @@ download_package() {
     sudo curl -sSL -O "${download_link}" || { print_error_message "Failed to download ${package_name}"; exit 1; }
 }
 
-# Function to install on Debian-based systems
+# Install on Debian-based systems
 install_debian() {
     local version=$1
     local package_name=$2
     sudo dpkg -i "${package_name}" || sudo apt-get -f install
 }
 
-# Function to install on RPM-based systems
+# Install on RPM-based systems
 install_rpm() {
     local version=$1
     local package_name=$2

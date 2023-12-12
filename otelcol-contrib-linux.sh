@@ -4,12 +4,12 @@ log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1"
 }
 
-# Display a message in green color
+# Display a success message in green
 print_success_message() {
     echo -e "\e[32m$1\e[0m"  # \e[32m sets the color to green, \e[0m resets the color
 }
 
-# Display a message in red color
+# Display an error message in red
 print_error_message() {
     echo -e "\e[31m$1\e[0m"  # \e[31m sets the color to red, \e[0m resets the color
 }

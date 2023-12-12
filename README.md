@@ -29,10 +29,10 @@ This is a bash installation script for Linux platforms' OTel Collector contrib v
 
 yum
 ```bash
-sudo yum remove -y otelcol-contrib && sudo yum remove -y jq && sudo rm -r /etc/otelcol-contrib/
+sudo yum remove -y otelcol-contrib && sudo rm -r /etc/otelcol-contrib && sudo yum remove -y jq
 ```
 
 apt
 ```bash
-sudo apt remove -y otelcol-contrib && sudo apt remove -y jq && sudo rm -r /etc/otelcol-contrib/
+sudo apt remove -y otelcol-contrib && sudo rm -r /etc/otelcol-contrib && sudo apt remove -y jq 
 ```
